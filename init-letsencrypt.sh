@@ -34,6 +34,7 @@ echo
 
 
 echo "### Starting nginx ..."
+docker compose -f docker-compose.yaml up --force-recreate -d grafana
 docker compose -f docker-compose.yaml up --force-recreate -d nginx
 echo
 
