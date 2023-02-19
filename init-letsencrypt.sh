@@ -34,8 +34,6 @@ echo
 
 
 echo "### Starting nginx ..."
-docker compose -f docker-compose.yaml up --force-recreate -d db
-docker compose -f docker-compose.yaml up --force-recreate -d web
 docker compose -f docker-compose.yaml up --force-recreate -d nginx
 echo
 
