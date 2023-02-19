@@ -32,7 +32,6 @@ services:
       - ./nginx/deploy.cfg:/etc/nginx/conf.d/default.conf
       - ./certbot_data/conf:/etc/letsencrypt
       - ./certbot_data/www:/var/www/certbot
-      - django_static:/static:ro
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     
   certbot:
