@@ -7,7 +7,8 @@ services:
       - '8086:8086'
     volumes:
       - influxdb-storage:/var/lib/influxdb2
-      
+      - influxdb-storage-etc:/etc/influxdb2
+
   grafana:
     image: grafana/grafana:latest
     volumes:
