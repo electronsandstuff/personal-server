@@ -62,3 +62,4 @@ volumes:
   influxdb-storage:
   letsencrypt_certs:
   certbot_acme_challenge:
+  influxdb-storage-etc:
