@@ -19,9 +19,18 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
-      
+
+  plex-match:
+    image: lukechannings/moviematch
+    environment:
+      - PLEX_URL=${PLEX_URL}
+      - PLEX_TOKEN=${PLEX_TOKEN}
+            
   nginx:
     image: nginx:latest
+    depends_on:
+      - plex-match
+      - grafana
     ports:
       - 80:80
       - 443:443
