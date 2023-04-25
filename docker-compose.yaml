@@ -25,7 +25,7 @@ services:
     environment:
       - PLEX_URL=${PLEX_URL}
       - PLEX_TOKEN=${PLEX_TOKEN}
-      - ROOT_PATH=match
+      - ROOT_PATH=/match
             
   nginx:
     image: nginx:latest
