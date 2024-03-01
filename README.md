@@ -16,3 +16,6 @@ git pull origin master
 bash stop-app.sh
 bash start-app.sh
 ```
+
+## Secrets
+Secrets are stored in a file called `.env` in the root of the repository. It isn't tracked by git for security reasons. This file should really only exist on the server. Environment variables defined there can be accessed through in `docker-compose.yaml` with the syntax `${YOUR_SECRET_HERE}`.
