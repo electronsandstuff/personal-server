@@ -66,6 +66,25 @@ services:
       INFLUX_USER: ${INFLUX_USER}
       INFLUX_PASSWORD: ${INFLUX_PASSWORD}
 
+  rustdesk-server:
+    container_name: rustdesk-server
+    ports:
+      - 21115:21115
+      - 21116:21116
+      - 21116:21116/udp
+      - 21117:21117
+      - 21118:21118
+      - 21119:21119
+    image: rustdesk/rustdesk-server-s6:latest
+    environment:
+      - "RELAY=rustdesk.example.com:21117"
+      - "ENCRYPTED_ONLY=1"
+      - "DB_URL=/db/db_v2.sqlite3"
+      - "KEY_PRIV=${RUSTDESK_KEY_PRIV}"
+      - "KEY_PUB=${RUSTDESK_KEY_PUB}"
+    volumes:
+      - rustdesk-db:/db
+    restart: unless-stopped
       
 volumes:
   grafana-storage:
@@ -73,3 +92,8 @@ volumes:
   letsencrypt_certs:
   certbot_acme_challenge:
   influxdb-storage-etc:
+  rustdesk-db:
+
+networks:
+  rustdesk-net:
+    external: false
