@@ -93,7 +93,3 @@ volumes:
   certbot_acme_challenge:
   influxdb-storage-etc:
   rustdesk-db:
-
-networks:
-  rustdesk-net:
-    external: false
