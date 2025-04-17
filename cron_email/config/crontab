@@ -1,0 +1,2 @@
+# Run the email script every hour
+0 * * * * cd /app && /opt/conda/bin/python /app/send_email.py >> /var/log/cron.log 2>&1
