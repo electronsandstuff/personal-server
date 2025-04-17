@@ -89,8 +89,8 @@ services:
     build: ./cron_email
     container_name: email-cron
     environment:
-      - GMAIL_USER=${RUSTDESK_KEY_PRIV}
-      - GMAIL_PASSWORD=${RUSTDESK_KEY_PRIV}
+      - GMAIL_USER=${CRON_EMAIL_GMAIL_USER}
+      - GMAIL_PASSWORD=${CRON_EMAIL_GMAIL_PASSWORD}
       - EMAIL_RECIPIENT=lost@chris-pierce.com
     restart: unless-stopped
 volumes:
