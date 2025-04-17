@@ -93,6 +93,8 @@ services:
       - GMAIL_PASSWORD=${CRON_EMAIL_GMAIL_PASSWORD}
       - EMAIL_RECIPIENT=lost@chris-pierce.com
     restart: unless-stopped
+    volumes:
+      - ./logs/email-cron:/var/log  
 volumes:
   grafana-storage:
   influxdb-storage:
