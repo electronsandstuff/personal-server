@@ -8,11 +8,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # Set up logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[logging.StreamHandler()]
-)
 logger = logging.getLogger('email_cron')
 
 # Get environment variables
@@ -44,22 +39,25 @@ def send_email():
     # Attach the body to the email
     msg.attach(MIMEText(body, 'plain'))
     
-    try:
-        # Establish connection to Gmail's SMTP server
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()  # Upgrade the connection to encrypted SSL/TLS
-        server.login(gmail_user, gmail_password)
-        
-        # Send the email
-        server.send_message(msg)
-        server.quit()
-        
-        logger.info(f"Email successfully sent at {current_time}")
-        
-    except Exception as e:
-        logger.error(f"Error sending email: {e}")
+    # Establish connection to Gmail's SMTP server
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()  # Upgrade the connection to encrypted SSL/TLS
+    server.login(gmail_user, gmail_password)
+    
+    # Send the email
+    server.send_message(msg)
+    server.quit()
+    
+    logger.info(f"Email successfully sent at {current_time}")
+
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[logging.StreamHandler()]
+    )
+
     if not all([gmail_user, gmail_password, recipient]):
         logger.error("Required environment variables are not set.")
         logger.error("Please ensure GMAIL_USER, GMAIL_PASSWORD, and EMAIL_RECIPIENT are set.")
