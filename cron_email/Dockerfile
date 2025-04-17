@@ -7,7 +7,7 @@ WORKDIR /app
 COPY environment.yml /app/environment.yml
 
 # Create conda environment
-RUN micromamba install -y -n base -f environment.yml && \
+RUN micromamba create -f environment.yml && \
     micromamba clean --all --yes
 
 # Install cron
@@ -30,7 +30,7 @@ RUN touch /var/log/cron.log
 
 # Set the shell for the crontab to use conda environment
 RUN echo "SHELL=/bin/bash" >> /etc/cron.d/email-cron && \
-    echo "PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> /etc/cron.d/email-cron
+    echo "PATH=/opt/conda/envs/email_env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> /etc/cron.d/email-cron
 
 # Run the command on container startup
 CMD cron && tail -f /var/log/cron.log
