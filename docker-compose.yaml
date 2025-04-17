@@ -86,7 +86,7 @@ services:
       - rustdesk-db:/db
     restart: unless-stopped
   email-cron:
-    build: ./cron_email
+    build: ./email-cron
     container_name: email-cron
     environment:
       - GMAIL_USER=${CRON_EMAIL_GMAIL_USER}
