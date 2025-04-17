@@ -27,11 +27,11 @@ def send_email():
     msg = MIMEMultipart()
     msg['From'] = GMAIL_USER
     msg['To'] = RECIPIENT
-    msg['Subject'] = f"Hourly Email Test - {current_time}"
+    msg['Subject'] = f"Email Test of \"{RECIPIENT}\" - {current_time}"
     
     # Email content
     body = f"""This is an automated email sent from your Docker container at {current_time}.
-If you're receiving this, your email test system is working correctly!
+to {RECIPIENT}. If you're receiving this, your email test system is working correctly!
 
 Docker Email Cron Service
 """
