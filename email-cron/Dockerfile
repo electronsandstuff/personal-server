@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y cron
 # Copy files
 COPY src/send_email.py /app/
 COPY src/run_email.sh /app/
+COPY src/templates/ /app/templates/
 COPY config/crontab /etc/cron.d/email-cron
 
 # Give execution rights to scripts and cron

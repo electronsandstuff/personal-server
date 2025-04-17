@@ -3,6 +3,7 @@ import smtplib
 import os
 import datetime
 import logging
+import jinja2
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -15,9 +16,13 @@ logging.basicConfig(
 logger = logging.getLogger('email_cron')
 
 # Get environment variables
-GMAIL_USER = os.environ.get('GMAIL_USER')
-GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD')  # App password, not regular password
-RECIPIENT = os.environ.get('EMAIL_RECIPIENT')
+gmail_user = os.environ.get('GMAIL_USER')
+gmail_password = os.environ.get('GMAIL_PASSWORD')  # App password, not regular password
+recipient = os.environ.get('EMAIL_RECIPIENT')
+
+# Set up Jinja2 environment
+template_loader = jinja2.FileSystemLoader(searchpath="/app/templates")
+template_env = jinja2.Environment(loader=template_loader)
 
 def send_email():
     # Current time for email subject
@@ -25,16 +30,16 @@ def send_email():
     
     # Create message container
     msg = MIMEMultipart()
-    msg['From'] = GMAIL_USER
-    msg['To'] = RECIPIENT
-    msg['Subject'] = f"Email Test of \"{RECIPIENT}\" - {current_time}"
+    msg['From'] = gmail_user
+    msg['To'] = recipient
+    msg['Subject'] = f"Email Test of \"{recipient}\" - {current_time}"
     
-    # Email content
-    body = f"""This is an automated email sent from your Docker container at {current_time}.
-to {RECIPIENT}. If you're receiving this, your email test system is working correctly!
-
-Docker Email Cron Service
-"""
+    # Load and render the email template
+    template = template_env.get_template("email_template.html")
+    body = template.render(
+        current_time=current_time,
+        recipient=recipient
+    )
     
     # Attach the body to the email
     msg.attach(MIMEText(body, 'plain'))
@@ -43,7 +48,7 @@ Docker Email Cron Service
         # Establish connection to Gmail's SMTP server
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()  # Upgrade the connection to encrypted SSL/TLS
-        server.login(GMAIL_USER, GMAIL_PASSWORD)
+        server.login(gmail_user, gmail_password)
         
         # Send the email
         server.send_message(msg)
@@ -55,7 +60,7 @@ Docker Email Cron Service
         logger.error(f"Error sending email: {e}")
 
 if __name__ == "__main__":
-    if not all([GMAIL_USER, GMAIL_PASSWORD, RECIPIENT]):
+    if not all([gmail_user, gmail_password, recipient]):
         logger.error("Required environment variables are not set.")
         logger.error("Please ensure GMAIL_USER, GMAIL_PASSWORD, and EMAIL_RECIPIENT are set.")
     else:
