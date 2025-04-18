@@ -1,2 +1,2 @@
-# Run the email script every minute
+# Run the email script every week
 0 0 * * 0 /app/run_email.sh
