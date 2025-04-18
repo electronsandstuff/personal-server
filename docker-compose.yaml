@@ -85,7 +85,16 @@ services:
     volumes:
       - rustdesk-db:/db
     restart: unless-stopped
-      
+  email-cron:
+    build: ./email-cron
+    container_name: email-cron
+    environment:
+      - GMAIL_USER=${CRON_EMAIL_GMAIL_USER}
+      - GMAIL_PASSWORD=${CRON_EMAIL_GMAIL_PASSWORD}
+      - EMAIL_RECIPIENT=lost@chris-pierce.com
+    restart: unless-stopped
+    volumes:
+      - ./logs/email-cron:/var/log  
 volumes:
   grafana-storage:
   influxdb-storage:
