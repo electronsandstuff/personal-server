@@ -72,5 +72,18 @@ docker compose -f docker-compose.yaml run --rm --entrypoint "\
     --force-renewal" certbot
 echo
 
+echo "### Fixing certificate directory name ..."
+docker compose -f docker-compose.yaml run --rm --entrypoint "\
+  sh -c 'if [ -d /etc/letsencrypt/live/grafana.chris-pierce.com-0001 ]; then \
+    rm -rf /etc/letsencrypt/live/grafana.chris-pierce.com && \
+    mv /etc/letsencrypt/live/grafana.chris-pierce.com-0001 /etc/letsencrypt/live/grafana.chris-pierce.com && \
+    rm -rf /etc/letsencrypt/archive/grafana.chris-pierce.com && \
+    mv /etc/letsencrypt/archive/grafana.chris-pierce.com-0001 /etc/letsencrypt/archive/grafana.chris-pierce.com && \
+    rm -f /etc/letsencrypt/renewal/grafana.chris-pierce.com.conf && \
+    mv /etc/letsencrypt/renewal/grafana.chris-pierce.com-0001.conf /etc/letsencrypt/renewal/grafana.chris-pierce.com.conf && \
+    sed -i \"s/grafana.chris-pierce.com-0001/grafana.chris-pierce.com/g\" /etc/letsencrypt/renewal/grafana.chris-pierce.com.conf; \
+  fi'" certbot
+echo
+
 echo "### Reloading nginx ..."
 docker compose -f docker-compose.yaml exec nginx nginx -s reload
