@@ -1,6 +1,6 @@
 #!/bin/bash
 
-domains=(grafana.chris-pierce.com nootflix.com)
+domains=(grafana.chris-pierce.com nootflix.com transit.chris-pierce.com)
 rsa_key_size=4096
 data_path="./certbot_data"
 email="contact@chris-pierce.com" # Adding a valid address is strongly recommended
