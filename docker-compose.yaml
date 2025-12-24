@@ -18,12 +18,12 @@ services:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
 
-  plex-match:
-    image: lukechannings/moviematch
-    environment:
-      - PLEX_URL=${PLEX_URL}
-      - PLEX_TOKEN=${PLEX_TOKEN}
-            
+  # plex-match:
+  #   image: lukechannings/moviematch
+  #   environment:
+  #     - PLEX_URL=${PLEX_URL}
+  #     - PLEX_TOKEN=${PLEX_TOKEN}
+
   transit-board:
     build:
       context: ${TRANSIT_BOARD}
@@ -45,7 +45,6 @@ services:
   nginx:
     image: nginx:latest
     depends_on:
-      - plex-match
       - grafana
       - transit-board
     ports:
@@ -54,6 +53,7 @@ services:
     volumes:
       - ./nginx/.htpassword:/etc/nginx/.htpasswd
       - ./nginx/deploy.cfg:/etc/nginx/conf.d/default.conf
+      - ./nginx/nootflix.html:/usr/share/nginx/html/nootflix.html:ro
       - ./certbot_data/conf:/etc/letsencrypt
       - ./certbot_data/www:/var/www/certbot
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
