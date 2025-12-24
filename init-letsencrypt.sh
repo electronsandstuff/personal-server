@@ -75,13 +75,21 @@ echo
 echo "### Fixing certificate directory name ..."
 docker compose -f docker-compose.yaml run --rm --entrypoint "\
   sh -c 'if [ -d /etc/letsencrypt/live/grafana.chris-pierce.com-0001 ]; then \
+    echo \"Renaming directories...\"; \
     rm -rf /etc/letsencrypt/live/grafana.chris-pierce.com && \
     mv /etc/letsencrypt/live/grafana.chris-pierce.com-0001 /etc/letsencrypt/live/grafana.chris-pierce.com && \
     rm -rf /etc/letsencrypt/archive/grafana.chris-pierce.com && \
     mv /etc/letsencrypt/archive/grafana.chris-pierce.com-0001 /etc/letsencrypt/archive/grafana.chris-pierce.com && \
     rm -f /etc/letsencrypt/renewal/grafana.chris-pierce.com.conf && \
     mv /etc/letsencrypt/renewal/grafana.chris-pierce.com-0001.conf /etc/letsencrypt/renewal/grafana.chris-pierce.com.conf && \
-    sed -i \"s/grafana.chris-pierce.com-0001/grafana.chris-pierce.com/g\" /etc/letsencrypt/renewal/grafana.chris-pierce.com.conf; \
+    sed -i \"s/grafana.chris-pierce.com-0001/grafana.chris-pierce.com/g\" /etc/letsencrypt/renewal/grafana.chris-pierce.com.conf && \
+    echo \"Fixing symlinks...\"; \
+    cd /etc/letsencrypt/live/grafana.chris-pierce.com && \
+    ln -sf ../../archive/grafana.chris-pierce.com/cert1.pem cert.pem && \
+    ln -sf ../../archive/grafana.chris-pierce.com/chain1.pem chain.pem && \
+    ln -sf ../../archive/grafana.chris-pierce.com/fullchain1.pem fullchain.pem && \
+    ln -sf ../../archive/grafana.chris-pierce.com/privkey1.pem privkey.pem && \
+    echo \"Certificate directory fixed successfully\"; \
   fi'" certbot
 echo
 
