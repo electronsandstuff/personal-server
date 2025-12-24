@@ -1,6 +1,7 @@
 #!/bin/bash
 
 domains=(grafana.chris-pierce.com nootflix.com transit.chris-pierce.com)
+cert_name="cmp_technologies"
 rsa_key_size=4096
 data_path="./certbot_data"
 email="contact@chris-pierce.com" # Adding a valid address is strongly recommended
@@ -22,9 +23,9 @@ if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/
   echo
 fi
 
-echo "### Creating dummy certificate for $domains ..."
-path="/etc/letsencrypt/live/$domains"
-mkdir -p "$data_path/conf/live/$domains"
+echo "### Creating dummy certificate for $cert_name ..."
+path="/etc/letsencrypt/live/$cert_name"
+mkdir -p "$data_path/conf/live/$cert_name"
 docker compose -f docker-compose.yaml run --rm --entrypoint "\
   openssl req -x509 -nodes -newkey rsa:$rsa_key_size -days 1\
     -keyout '$path/privkey.pem' \
@@ -38,11 +39,11 @@ docker compose -f docker-compose.yaml up --force-recreate -d grafana
 docker compose -f docker-compose.yaml up --force-recreate -d nginx
 echo
 
-echo "### Deleting dummy certificate for $domains ..."
+echo "### Deleting dummy certificate for $cert_name ..."
 docker compose -f docker-compose.yaml run --rm --entrypoint "\
-  rm -Rf /etc/letsencrypt/live/$domains && \
-  rm -Rf /etc/letsencrypt/archive/$domains && \
-  rm -Rf /etc/letsencrypt/renewal/$domains.conf" certbot
+  rm -Rf /etc/letsencrypt/live/$cert_name && \
+  rm -Rf /etc/letsencrypt/archive/$cert_name && \
+  rm -Rf /etc/letsencrypt/renewal/$cert_name.conf" certbot
 echo
 
 
@@ -69,16 +70,17 @@ docker compose -f docker-compose.yaml run --rm --entrypoint "\
     $domain_args \
     --rsa-key-size $rsa_key_size \
     --agree-tos \
-    --force-renewal" certbot
+    --force-renewal \
+    --cert-name $cert_name" certbot
 echo
 
 echo "### Fixing certificate directory name ..."
 docker compose -f docker-compose.yaml run --rm --entrypoint "\
-  sh -c 'if [ -d /etc/letsencrypt/live/grafana.chris-pierce.com-0001 ]; then \
+  sh -c 'if [ -d /etc/letsencrypt/live/cmp_technologies-0001 ]; then \
     echo \"Creating symlink to -0001 directory...\"; \
     cd /etc/letsencrypt/live && \
-    rm -rf grafana.chris-pierce.com && \
-    ln -s grafana.chris-pierce.com-0001 grafana.chris-pierce.com && \
+    rm -rf cmp_technologies && \
+    ln -s cmp_technologies-0001 cmp_technologies && \
     echo \"Certificate symlink created successfully\"; \
   fi'" certbot
 echo
