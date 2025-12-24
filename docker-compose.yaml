@@ -45,7 +45,6 @@ services:
   nginx:
     image: nginx:latest
     depends_on:
-      - grafana
       - transit-board
     ports:
       - 80:80
