@@ -75,10 +75,11 @@ echo
 echo "### Fixing certificate directory name ..."
 docker compose -f docker-compose.yaml run --rm --entrypoint "\
   sh -c 'if [ -d /etc/letsencrypt/live/grafana.chris-pierce.com-0001 ]; then \
-    echo \"Creating symlinks to -0001 directories...\"; \
-    rm -rf /etc/letsencrypt/live/grafana.chris-pierce.com && \
-    ln -s grafana.chris-pierce.com-0001 /etc/letsencrypt/live/grafana.chris-pierce.com && \
-    echo \"Certificate symlinks created successfully\"; \
+    echo \"Creating symlink to -0001 directory...\"; \
+    cd /etc/letsencrypt/live && \
+    rm -rf grafana.chris-pierce.com && \
+    ln -s grafana.chris-pierce.com-0001 grafana.chris-pierce.com && \
+    echo \"Certificate symlink created successfully\"; \
   fi'" certbot
 echo
 
