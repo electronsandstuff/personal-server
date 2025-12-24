@@ -5,7 +5,7 @@ This repo is for all applications that will run on my personal server at Digial 
 1) Log into the console for `apollo` through Digital Ocean
 2) Navigate to the repo's directory.
 ```
-cd Influxdb-Grafana-Docker-Compose
+cd personal-server
 ```
 3) Pull latest changes from github (or switch to the new branch and pull)
 ```

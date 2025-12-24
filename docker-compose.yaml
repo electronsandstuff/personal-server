@@ -26,11 +26,30 @@ services:
       - PLEX_URL=${PLEX_URL}
       - PLEX_TOKEN=${PLEX_TOKEN}
             
+  transit-board:
+    build:
+      context: ${TRANSIT_BOARD}
+      dockerfile: Dockerfile
+    image: transit-board:latest
+    container_name: transit-board
+    restart: unless-stopped
+    volumes:
+      - ${TRANSIT_BOARD}/config/prod.yml:/app/config/prod.yml:ro
+    environment:
+      TRANSIT_OPEN_511_API_KEY: ${TRANSIT_OPEN_511_API_KEY}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000').read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
   nginx:
     image: nginx:latest
     depends_on:
       - plex-match
       - grafana
+      - transit-board
     ports:
       - 80:80
       - 443:443
